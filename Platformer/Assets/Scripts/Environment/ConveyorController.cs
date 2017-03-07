@@ -59,7 +59,7 @@ public class ConveyorController : MonoBehaviour {
         }
         else
         {
-            if (time > 10.0f) // ten second loops
+            if (time > 5.0f) // ten second loops
             {
                 if (direction == 0)
                 {

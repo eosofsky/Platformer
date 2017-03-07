@@ -4,70 +4,72 @@ using System.Collections;
 // Adapted from https://forum.unity3d.com/threads/throw-an-object-along-a-parabola.158855/
 public class ThrowHead_V2 : MonoBehaviour
 {
-	public Transform Target;
-	public float firingAngle = 45.0f;
-	public float gravity = 9.8f;
+    public Transform Target;
+    public float firingAngle = 45.0f;
+    public float gravity = 9.8f;
 
-	public Transform Projectile;      
-	private Transform myTransform;
+    public Transform Projectile;
+    private Transform myTransform;
 
-	private Transform lookPoint;
+    private Transform lookPoint;
 
-	void Awake()
-	{
-		myTransform = transform;      
-	}
+    void Awake()
+    {
+        myTransform = transform;
+    }
 
-	void Update()
-	{     
-		if (Input.GetKeyDown (KeyCode.P)) {
-			/* Unparent the head from the body */
-			gameObject.transform.parent = null;
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            /* Unparent the head from the body */
+            gameObject.transform.parent = null;
 
-			/* Set to look at the body */
-			lookPoint = GameObject.FindGameObjectWithTag ("Player").transform;
+            /* Set to look at the body */
+            lookPoint = GameObject.FindGameObjectWithTag("Player").transform;
 
-			StartCoroutine (SimulateProjectile ());
-		}
+            StartCoroutine(SimulateProjectile());
+        }
 
-		if ((Input.GetAxis ("Vertical") != 0) || (Input.GetAxis ("Horizontal") != 0)) {
-			transform.LookAt (lookPoint);
-		}
-	}
+        if ((Input.GetAxis("Vertical") != 0) || (Input.GetAxis("Horizontal") != 0))
+        {
+            transform.LookAt(lookPoint);
+        }
+    }
 
-	IEnumerator SimulateProjectile()
-	{
-		// Short delay added before Projectile is thrown
-		//yield return new WaitForSeconds(1.5f);
+    IEnumerator SimulateProjectile()
+    {
+        // Short delay added before Projectile is thrown
+        //yield return new WaitForSeconds(1.5f);
 
-		// Move projectile to the position of throwing object + add some offset if needed.
-		Projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
+        // Move projectile to the position of throwing object + add some offset if needed.
+        Projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
 
-		// Calculate distance to target
-		float target_Distance = Vector3.Distance(Projectile.position, Target.position);
+        // Calculate distance to target
+        float target_Distance = Vector3.Distance(Projectile.position, Target.position);
 
-		// Calculate the velocity needed to throw the object to the target at specified angle.
-		float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
+        // Calculate the velocity needed to throw the object to the target at specified angle.
+        float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
 
-		// Extract the X  Y componenent of the velocity
-		float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
-		float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
+        // Extract the X  Y componenent of the velocity
+        float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
+        float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
 
-		// Calculate flight time.
-		float flightDuration = target_Distance / Vx;
+        // Calculate flight time.
+        float flightDuration = target_Distance / Vx;
 
-		// Rotate projectile to face the target.
-		Projectile.rotation = Quaternion.LookRotation(Target.position - Projectile.position);
+        // Rotate projectile to face the target.
+        Projectile.rotation = Quaternion.LookRotation(Target.position - Projectile.position);
 
-		float elapse_time = 0;
+        float elapse_time = 0;
 
-		while (elapse_time < flightDuration)
-		{
-			Projectile.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
+        while (elapse_time < flightDuration)
+        {
+            Projectile.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
 
-			elapse_time += Time.deltaTime;
+            elapse_time += Time.deltaTime;
 
-			yield return null;
-		}
-	}  
+            yield return null;
+        }
+    }
 }
