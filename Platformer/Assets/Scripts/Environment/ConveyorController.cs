@@ -1,0 +1,123 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ConveyorController : MonoBehaviour {
+
+    public float startingX;
+    public float startingY;
+    public float startingZ;
+
+    private bool moving;
+    private int direction; // 1 if up, -1 if down, 0 if neither
+    private int movements;
+
+    private float time;
+
+    private float height;
+    private float delta; // the change between heights
+
+    // Use this for initialization
+    void Start()
+    {
+        time = 0;
+        movements = 40; // how many steps we should take
+        direction = 0;
+
+        height = 0.6f;
+        delta = (startingY - height) / movements;
+        movements = 0; // set the amount of movements we've made to zero
+    }
+	
+	// Update is called once per frame
+	void Update () {
+        time += Time.deltaTime;
+
+        var currentPosition = transform.position;
+
+        if (!moving)
+        {
+            if (direction == 0)
+            {
+                if (AlmostEqual(currentPosition.x, startingX) &&
+                   AlmostEqual(currentPosition.y, startingY) &&
+                   AlmostEqual(currentPosition.z, startingZ))
+                {
+                    direction = -1;
+                }
+            }
+            else if (direction == -1)
+            {
+                direction = 1;
+            }
+            else if (direction == 1)
+            {
+                direction = 0;
+            }
+            moving = true;
+            time = 0.0f;
+        }
+        else
+        {
+            if (time > 10.0f) // ten second loops
+            {
+                if (direction == 0)
+                {
+                    SmoothRotate();
+                }
+                else
+                {
+                    SmoothRise();
+                }
+            }
+        }
+	}
+
+    void SmoothRise()
+    {
+        if (movements < 40)
+        {
+            var currentPosition = transform.position;
+            var x = currentPosition.x;
+            var y = currentPosition.y + direction*delta;
+            var z = currentPosition.z;
+
+            transform.position = new Vector3(x, y, z);
+            movements++;
+        }
+        else
+        {
+            movements = 0;
+            moving = false;
+        }
+    }
+
+    void SmoothRotate()
+    {
+        if (movements < 40)
+        {
+            var axis = new Vector3(0.0f, 1.0f, 0.0f);
+            var origin = new Vector3(0.0f, 0.0f, 0.0f);
+            transform.RotateAround(origin, axis, 0.5f);
+            movements++;
+        }
+        else
+        {
+            movements = 0;
+            moving = false;
+        }
+    }
+
+    bool AlmostEqual(float x, float y)
+    {
+        var buffer = 0.05f;
+        var low = y - buffer;
+        var high = y + buffer;
+
+        if (low <= x && x <= high)
+        {
+            return true;
+        }
+        return false;
+    }
+}
