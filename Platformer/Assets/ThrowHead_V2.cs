@@ -11,6 +11,8 @@ public class ThrowHead_V2 : MonoBehaviour
 	public Transform Projectile;      
 	private Transform myTransform;
 
+	private Transform lookPoint;
+
 	void Awake()
 	{
 		myTransform = transform;      
@@ -19,7 +21,17 @@ public class ThrowHead_V2 : MonoBehaviour
 	void Update()
 	{     
 		if (Input.GetKeyDown (KeyCode.P)) {
+			/* Unparent the head from the body */
+			gameObject.transform.parent = null;
+
+			/* Set to look at the body */
+			lookPoint = GameObject.FindGameObjectWithTag ("Player").transform;
+
 			StartCoroutine (SimulateProjectile ());
+		}
+
+		if ((Input.GetAxis ("Vertical") != 0) || (Input.GetAxis ("Horizontal") != 0)) {
+			transform.LookAt (lookPoint);
 		}
 	}
 
