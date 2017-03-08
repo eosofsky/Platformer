@@ -11,27 +11,40 @@ public class ThrowHead_V2 : MonoBehaviour
     public Transform Projectile;
     private Transform myTransform;
 
+    private bool hasThrown;
+    private bool canThrow;
+    private bool moving;
+
     private Transform lookPoint;
 
     void Awake()
     {
         myTransform = transform;
+        hasThrown = false;
+        canThrow = false;
+        moving = true;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (canThrow && !hasThrown)
         {
-            /* Unparent the head from the body */
-            gameObject.transform.parent = null;
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                /* Unparent the head from the body */
+                gameObject.transform.parent = null;
 
-            /* Set to look at the body */
-            lookPoint = GameObject.FindGameObjectWithTag("Player").transform;
+                /* Set to look at the body */
+                lookPoint = GameObject.FindGameObjectWithTag("Player").transform;
 
-            StartCoroutine(SimulateProjectile());
+                StartCoroutine(SimulateProjectile());
+
+                var rb = gameObject.AddComponent<Rigidbody>();
+                rb.useGravity = false;
+            }
         }
-
-        if ((Input.GetAxis("Vertical") != 0) || (Input.GetAxis("Horizontal") != 0))
+        if (hasThrown && !moving &&
+            ((Input.GetAxis("Vertical") != 0) || (Input.GetAxis("Horizontal") != 0)))
         {
             transform.LookAt(lookPoint);
         }
@@ -71,5 +84,19 @@ public class ThrowHead_V2 : MonoBehaviour
 
             yield return null;
         }
+
+        gameObject.transform.parent = Target;
+        hasThrown = true;
+    }
+
+    public void SetTarget (Transform t, bool ct)
+    {
+        canThrow = ct;
+        Target = t;
+    }
+
+    public void LockMovement (bool moving)
+    {
+        this.moving = moving;
     }
 }
