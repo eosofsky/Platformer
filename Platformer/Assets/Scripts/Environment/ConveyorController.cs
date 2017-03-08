@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ConveyorController : MonoBehaviour {
 
+    public GameObject DissembodiedHead;
+
     public float startingX;
     public float startingY;
     public float startingZ;
@@ -37,6 +39,7 @@ public class ConveyorController : MonoBehaviour {
 
         if (!moving)
         {
+            DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(false);
             if (direction == 0)
             {
                 if (AlmostEqual(currentPosition.x, startingX) &&
@@ -49,18 +52,26 @@ public class ConveyorController : MonoBehaviour {
             else if (direction == -1)
             {
                 direction = 1;
+                DissembodiedHead.GetComponent<ThrowHead_V2>().SetTarget(transform, true);
             }
             else if (direction == 1)
             {
                 direction = 0;
+                DissembodiedHead.GetComponent<ThrowHead_V2>().SetTarget(transform, false);
             }
             moving = true;
             time = 0.0f;
         }
         else
         {
-            if (time > 5.0f) // ten second loops
+            if (time > 5.0f) // five second loops
             {
+                if (movements < 1)
+                {
+                    GetComponentInParent<ConveyorSound>().PlaySound();
+                }
+
+                DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(true);
                 if (direction == 0)
                 {
                     SmoothRotate();
