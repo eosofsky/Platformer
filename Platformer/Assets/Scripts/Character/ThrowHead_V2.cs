@@ -4,62 +4,58 @@ using System.Collections;
 // Adapted from https://forum.unity3d.com/threads/throw-an-object-along-a-parabola.158855/
 public class ThrowHead_V2 : MonoBehaviour
 {
-    public Transform Target;
     public float firingAngle = 45.0f;
     public float gravity = 9.8f;
 
     public Transform Projectile;
-    private Transform myTransform;
 
     private bool hasThrown;
-    private bool canThrow;
     private bool moving;
-
-    private Transform lookPoint;
 
     void Awake()
     {
-        myTransform = transform;
         hasThrown = false;
-        canThrow = false;
         moving = true;
     }
 
     void Update()
     {
-        if (canThrow && !hasThrown)
+		if (!hasThrown)
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
+				Transform target = Aim.Target;
+				if (!target) {
+					return;
+				}
                 /* Unparent the head from the body */
-                gameObject.transform.parent = null;
+				Projectile.transform.parent = null;
 
-                /* Set to look at the body */
-                lookPoint = GameObject.FindGameObjectWithTag("Player").transform;
+				/* Make the head visible */
+				Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
 
-                StartCoroutine(SimulateProjectile());
+				/* Make old head invisible */
+				GameObject.FindGameObjectWithTag("AttachedHead").GetComponent<SkinnedMeshRenderer> ().enabled = false;
+
+				StartCoroutine(SimulateProjectile(target));
 
                 var rb = gameObject.AddComponent<Rigidbody>();
                 rb.useGravity = false;
             }
         }
-        if (hasThrown && !moving &&
-            ((Input.GetAxis("Vertical") != 0) || (Input.GetAxis("Horizontal") != 0)))
-        {
-            transform.LookAt(lookPoint);
-        }
     }
 
-    IEnumerator SimulateProjectile()
+	IEnumerator SimulateProjectile(Transform target)
     {
-        // Short delay added before Projectile is thrown
-        //yield return new WaitForSeconds(1.5f);
+		Vector3 destination = target.position;
+		destination.y -= 0.91f;
+		destination.z -= 0.2f;
 
         // Move projectile to the position of throwing object + add some offset if needed.
-        Projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
+        //Projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
 
         // Calculate distance to target
-        float target_Distance = Vector3.Distance(Projectile.position, Target.position);
+		float target_Distance = Vector3.Distance(Projectile.position, destination);
 
         // Calculate the velocity needed to throw the object to the target at specified angle.
         float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
@@ -72,28 +68,63 @@ public class ThrowHead_V2 : MonoBehaviour
         float flightDuration = target_Distance / Vx;
 
         // Rotate projectile to face the target.
-        Projectile.rotation = Quaternion.LookRotation(Target.position - Projectile.position);
+		Quaternion orgRot = Camera.main.transform.rotation;
+		Projectile.rotation = Quaternion.LookRotation(destination - Projectile.position);
+		Quaternion newRot = Camera.main.transform.rotation;
+		Camera.main.transform.rotation = orgRot;
 
         float elapse_time = 0;
 
-        while (elapse_time < flightDuration)
+		while (elapse_time < flightDuration)
         {
             Projectile.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
+
+			/* Slowly rotate camera to have same rotation as head */
+			Camera.main.transform.rotation = Quaternion.Lerp (Camera.main.transform.rotation, newRot, 0.025f);
+
+			/* Slowly move camera to have same position as head */
+			Vector3 cameraDest = Projectile.position;
+			cameraDest.y += 1.3f;
+			Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, cameraDest, 0.01f);
+
+			FadeHead ();
 
             elapse_time += Time.deltaTime;
 
             yield return null;
         }
 
-        gameObject.transform.parent = Target;
+		/* Make the head invisible */
+		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = false;
+
+		/* Activate the FPS viewpoint */
+		CameraRotate.Instance.Activate ();
+
+		/* Make sure the head hasn't missed the platform if the platform has started moving upwards */
+		if (Camera.main.transform.position.y < target.position.y) {
+			gameObject.GetComponent <Rigidbody> ().useGravity = true;
+		}
+
+        gameObject.transform.parent = target;
         hasThrown = true;
+		Aim.AimEnabled = false;
     }
 
-    public void SetTarget (Transform t, bool ct)
+	public void SetTarget (GameObject t, bool ct)
     {
-        canThrow = ct;
-        Target = t;
+		if (ct) {
+			t.layer = LayerMask.NameToLayer("Targetable");
+		} else {
+			t.layer = LayerMask.NameToLayer("Default");
+		}
     }
+
+	private void FadeHead () {
+		Material material = GameObject.FindGameObjectWithTag ("Head").GetComponentInChildren<SkinnedMeshRenderer> ().material;
+		Color color = material.color;
+		color.a -= 0.017f;
+		material.color = color;
+	}
 
     public void LockMovement (bool moving)
     {
