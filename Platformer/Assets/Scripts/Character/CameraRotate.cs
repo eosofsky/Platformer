@@ -12,7 +12,6 @@ public class CameraRotate: MonoBehaviour {
 
 	private bool isActive = false;
 	private bool isActivating = false;
-	private int activatingCount = 0;
 
 	void Awake () {
 		Instance = this;
@@ -25,6 +24,13 @@ public class CameraRotate: MonoBehaviour {
 		isActivating = true;
 	}
 
+	public void Deactivate () {
+		m_Camera = null;
+		isActive = false;
+		isActivating = false;
+		m_MouseLook.SetCursorLock (false);
+	}
+
 	void Update () {
 		if (!isActive) {
 			return;
@@ -33,13 +39,12 @@ public class CameraRotate: MonoBehaviour {
 		if (isActivating) {
 			/* Slowly rotate camera to look towards body */
 			GameObject body = GameObject.FindGameObjectWithTag ("Player");
-			Quaternion targetRot = Quaternion.LookRotation(body.transform.position - Camera.main.transform.position);
-			Camera.main.transform.localRotation = Quaternion.Slerp (Camera.main.transform.localRotation, targetRot,
+			Quaternion targetRot = Quaternion.LookRotation(body.transform.position - m_Camera.transform.position);
+			m_Camera.transform.localRotation = Quaternion.Slerp (m_Camera.transform.localRotation, targetRot,
 					0.025f); 
-			activatingCount++;
-			if (activatingCount >= 150) {
+			if (Quaternion.Angle (m_Camera.transform.localRotation, targetRot) < 5f) {
 				isActivating = false;
-				m_MouseLook.Init(m_Camera.transform , m_Camera.transform);
+				m_MouseLook.Init(m_Camera.transform, m_Camera.transform);
 			}
 			return;
 		}

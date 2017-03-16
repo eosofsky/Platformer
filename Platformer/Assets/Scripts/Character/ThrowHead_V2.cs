@@ -11,6 +11,11 @@ public class ThrowHead_V2 : MonoBehaviour
 
     private bool hasThrown;
     private bool moving;
+	private float cameraHeight = 1.3f;
+
+	private Transform originalTransform;
+	private Vector3 originalCameraPos;
+	private Quaternion originalCameraRot;
 
     void Awake()
     {
@@ -20,29 +25,36 @@ public class ThrowHead_V2 : MonoBehaviour
 
     void Update()
     {
-		if (!hasThrown)
-        {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
+		if (!hasThrown) {
+			if (Input.GetKeyDown (KeyCode.P)) {
 				Transform target = Aim.Target;
 				if (!target) {
 					return;
 				}
-                /* Unparent the head from the body */
+
+				originalCameraPos = Camera.main.transform.localPosition;
+				originalCameraRot = Camera.main.transform.localRotation;
+
+				/* Unparent the head from the body */
+				originalTransform = Projectile.transform.parent;
 				Projectile.transform.parent = null;
 
 				/* Make the head visible */
 				Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
 
 				/* Make old head invisible */
-				GameObject.FindGameObjectWithTag("AttachedHead").GetComponent<SkinnedMeshRenderer> ().enabled = false;
+				GameObject.FindGameObjectWithTag ("AttachedHead").GetComponent<SkinnedMeshRenderer> ().enabled = false;
 
-				StartCoroutine(SimulateProjectile(target));
+				StartCoroutine (SimulateProjectile (target));
 
-                var rb = gameObject.AddComponent<Rigidbody>();
-                rb.useGravity = false;
-            }
-        }
+				var rb = gameObject.AddComponent<Rigidbody> ();
+				rb.useGravity = false;
+			}
+		} else {
+			if (Input.GetKeyDown (KeyCode.P)) {
+				ResetHead ();
+			}
+		}
     }
 
 	IEnumerator SimulateProjectile(Transform target)
@@ -84,7 +96,7 @@ public class ThrowHead_V2 : MonoBehaviour
 
 			/* Slowly move camera to have same position as head */
 			Vector3 cameraDest = Projectile.position;
-			cameraDest.y += 1.3f;
+			cameraDest.y += cameraHeight;
 			Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, cameraDest, 0.01f);
 
 			FadeHead ();
@@ -126,8 +138,50 @@ public class ThrowHead_V2 : MonoBehaviour
 		material.color = color;
 	}
 
+	private void ResetHeadOpacity () {
+		Material material = GameObject.FindGameObjectWithTag ("Head").GetComponentInChildren<SkinnedMeshRenderer> ().material;
+		Color color = material.color;
+		color.a = 1f;
+		material.color = color;
+	}
+
     public void LockMovement (bool moving)
     {
         this.moving = moving;
     }
+
+	public void ResetHead () {
+		if (!hasThrown) {
+			return;
+		}
+
+		GameObject attachedHead = GameObject.FindGameObjectWithTag("AttachedHead");
+
+		/* Reset the position and rotation */
+		Projectile.transform.position = attachedHead.transform.position;
+		Camera.main.transform.localPosition = originalCameraPos;
+		Camera.main.transform.localRotation = originalCameraRot;
+
+		/* Reparent the head to the body */
+		Projectile.transform.parent = originalTransform;
+		originalTransform = null;
+
+		/* Make the dissembodied head invisible */
+		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = false;
+
+		ResetHeadOpacity ();
+
+		/* Make attached head visible */
+		attachedHead.GetComponent<SkinnedMeshRenderer> ().enabled = true;
+
+		/* Dissembodied head faces the same direction as the attached head */
+		Projectile.rotation = attachedHead.transform.rotation;
+
+		Destroy(gameObject.GetComponent<Rigidbody> ());
+
+		CameraRotate.Instance.Deactivate ();
+
+		hasThrown = false;
+		Aim.AimEnabled = true;
+	}
 }
