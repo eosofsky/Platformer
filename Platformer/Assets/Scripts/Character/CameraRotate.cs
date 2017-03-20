@@ -22,6 +22,7 @@ public class CameraRotate: MonoBehaviour {
 		m_Camera = Camera.main;
 		isActive = true;
 		isActivating = true;
+		m_MouseLook.SetCursorLock (true);
 	}
 
 	public void Deactivate () {

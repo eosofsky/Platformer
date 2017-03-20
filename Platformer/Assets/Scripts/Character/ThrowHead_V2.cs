@@ -39,11 +39,8 @@ public class ThrowHead_V2 : MonoBehaviour
 				originalTransform = Projectile.transform.parent;
 				Projectile.transform.parent = null;
 
-				/* Make the head visible */
-				Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
-
-				/* Make old head invisible */
-				GameObject.FindGameObjectWithTag ("AttachedHead").GetComponent<SkinnedMeshRenderer> ().enabled = false;
+				/* Trigger animation */
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<Animator> ().SetTrigger ("Throw");
 
 				StartCoroutine (SimulateProjectile (target));
 
@@ -59,6 +56,14 @@ public class ThrowHead_V2 : MonoBehaviour
 
 	IEnumerator SimulateProjectile(Transform target)
     {
+		yield return new WaitForSeconds (0.6f);
+
+		/* Make old head invisible */
+		GameObject.FindGameObjectWithTag ("AttachedHead").GetComponent<SkinnedMeshRenderer> ().enabled = false;
+
+		/* Make the head visible */
+		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
+
 		Vector3 destination = target.position;
 		destination.y -= 0.91f;
 		destination.z -= 0.2f;
