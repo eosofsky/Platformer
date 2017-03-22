@@ -10,7 +10,7 @@ public class ThrowHead_V2 : MonoBehaviour
     public Transform Projectile;
 
     private bool hasThrown;
-    private bool moving;
+    //private bool moving;
 	private float cameraHeight = 1.3f;
 
 	private Transform originalTransform;
@@ -20,13 +20,13 @@ public class ThrowHead_V2 : MonoBehaviour
     void Awake()
     {
         hasThrown = false;
-        moving = true;
+        //moving = true;
     }
 
     void Update()
     {
 		if (!hasThrown) {
-			if (Input.GetKeyDown (KeyCode.P)) {
+			if (Input.GetMouseButtonDown (0)) {//Input.GetKeyDown (KeyCode.P)) {
 				Transform target = Aim.Target;
 				if (!target) {
 					return;
@@ -48,7 +48,7 @@ public class ThrowHead_V2 : MonoBehaviour
 				rb.useGravity = false;
 			}
 		} else {
-			if (Input.GetKeyDown (KeyCode.P)) {
+			if (Input.GetMouseButtonDown (0)) {//Input.GetKeyDown (KeyCode.P)) {
 				ResetHead ();
 			}
 		}
@@ -150,10 +150,10 @@ public class ThrowHead_V2 : MonoBehaviour
 		material.color = color;
 	}
 
-    public void LockMovement (bool moving)
-    {
-        this.moving = moving;
-    }
+    //public void LockMovement (bool moving)
+    //{
+    //    this.moving = moving;
+    //}
 
 	public void ResetHead () {
 		if (!hasThrown) {

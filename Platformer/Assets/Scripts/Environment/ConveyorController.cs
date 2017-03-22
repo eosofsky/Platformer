@@ -41,7 +41,7 @@ public class ConveyorController : MonoBehaviour {
 
         if (!moving)
         {
-            DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(false);
+            //DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(false);
             if (direction == 0)
             {
                 if (AlmostEqual(currentPosition.x, startingX) &&
@@ -73,7 +73,7 @@ public class ConveyorController : MonoBehaviour {
                     GetComponentInParent<ConveyorSound>().PlaySound();
                 }
 
-                DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(true);
+                //DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(true);
                 if (direction == 0)
                 {
                     SmoothRotate();

@@ -7,23 +7,34 @@ public class StairsButton : MonoBehaviour {
 	public Material activateMat;
 	public Material deactivateMat;
 
+	private GameObject[] stairs;
 	private static int numHolders = 0;
-
-	private MeshRenderer renderer;
+	private MeshRenderer meshRenderer;
 
 	void Awake () {
-		renderer = GetComponent<MeshRenderer> ();
+		meshRenderer = GetComponent<MeshRenderer> ();
+		stairs = GameObject.FindGameObjectsWithTag ("Stair");
 	}
 
 	void OnTriggerEnter () {
-		renderer.material = activateMat;
 		numHolders++;
+		if (numHolders == 1) {
+			meshRenderer.material = activateMat;
+			StairTrigger.instance.PlayStairSound ();
+			for (int i = 0; i < stairs.Length; i++) {
+				stairs[i].GetComponent<StairController>().Trigger();
+			}
+		}
 	}
 		
 	void OnTriggerExit () {
 		numHolders--;
 		if (numHolders == 0) {
-			renderer.material = deactivateMat;
+			meshRenderer.material = deactivateMat;
+			StairTrigger.instance.PlayStairSound ();
+			for (int i = 0; i < stairs.Length; i++) {
+				stairs[i].GetComponent<StairController>().Untrigger();
+			}
 		}
 	}
 

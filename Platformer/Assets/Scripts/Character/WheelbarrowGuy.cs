@@ -11,12 +11,12 @@ public class WheelbarrowGuy : MonoBehaviour {
 
 	private Transform dest;
 	private Animator animator;
+	private NavMeshAgent agent;
 
 	void Awake () {
 		dest = furnace;
-		NavMeshAgent agent = GetComponent<NavMeshAgent> ();
+		agent = GetComponent<NavMeshAgent> ();
 		agent.destination = dest.position;
-
 		animator = GetComponent<Animator> ();
 	}
 
