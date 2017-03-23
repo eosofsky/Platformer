@@ -28,7 +28,7 @@ public class ConveyorController : MonoBehaviour {
         movements = 40; // how many steps we should take
         direction = 0;
 
-        height = 0.6f;
+        height = 2.0f;
         delta = (startingY - height) / movements;
         movements = 0; // set the amount of movements we've made to zero
 
