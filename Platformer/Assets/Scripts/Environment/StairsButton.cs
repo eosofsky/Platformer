@@ -8,12 +8,14 @@ public class StairsButton : MonoBehaviour {
 	public Material deactivateMat;
 
 	private GameObject[] stairs;
-	private static int numHolders = 0;
+	private static int numHolders;
 	private MeshRenderer meshRenderer;
 
 	void Awake () {
 		meshRenderer = GetComponent<MeshRenderer> ();
+		meshRenderer.material = deactivateMat;
 		stairs = GameObject.FindGameObjectsWithTag ("Stair");
+		numHolders = 0;
 	}
 
 	void OnTriggerEnter () {
@@ -36,6 +38,10 @@ public class StairsButton : MonoBehaviour {
 				stairs[i].GetComponent<StairController>().Untrigger();
 			}
 		}
+	}
+
+	public static bool IsCovered () {
+		return (numHolders > 0);
 	}
 
 }

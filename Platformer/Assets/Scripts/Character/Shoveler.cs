@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Drawer : MonoBehaviour {
+public class Shoveler : MonoBehaviour {
 
 	private static Animator animator;
 	private static NavMeshAgent agent;
-	private static Transform internalStairsButton;
 	private static bool isWalking = false;
 
-	public Transform stairsButton;
+	public Transform coalPile;
 
 	void Awake () {
 		animator = GetComponent<Animator> ();
 		agent = GetComponent<NavMeshAgent> ();
-		internalStairsButton = stairsButton;
 	}
 
 	void Update () {
@@ -25,15 +23,8 @@ public class Drawer : MonoBehaviour {
 		}
 	}
 
-	public static void DrawerMoveToStairButton () {
-		agent.destination = internalStairsButton.position;
-		animator.SetBool ("Walking", true);
-		isWalking = true;
-	}
-
-	public static void DrawerMoveToPlayer () {
-		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		agent.destination = player.transform.position;
+	public void ShovelerMove () {
+		agent.destination = coalPile.position;
 		animator.SetBool ("Walking", true);
 		isWalking = true;
 	}

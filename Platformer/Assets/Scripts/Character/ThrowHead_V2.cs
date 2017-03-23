@@ -124,7 +124,7 @@ public class ThrowHead_V2 : MonoBehaviour
 
         gameObject.transform.parent = target;
         hasThrown = true;
-		Aim.AimEnabled = false;
+		Aim.Deactivate ();
     }
 
 	public void SetTarget (GameObject t, bool ct)
@@ -187,6 +187,6 @@ public class ThrowHead_V2 : MonoBehaviour
 		CameraRotate.Instance.Deactivate ();
 
 		hasThrown = false;
-		Aim.AimEnabled = true;
+		Aim.Activate ();
 	}
 }
