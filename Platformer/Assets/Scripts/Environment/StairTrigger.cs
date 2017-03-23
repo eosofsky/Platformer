@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class StairTrigger : MonoBehaviour {
 
-    public GameObject head;
-    public GameObject[] stairs;
+    //public GameObject head;
+    //public GameObject[] stairs;
 
+	public static StairTrigger instance;
     public AudioClip riseSound;
     AudioSource rise;
 
     private void Awake()
     {
+		instance = this;
         rise = GetComponent<AudioSource>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag.Equals("Head"))
         {
@@ -25,5 +27,9 @@ public class StairTrigger : MonoBehaviour {
                 stair.GetComponent<StairController>().Trigger();
             }
         }
-    } 
+    }*/
+
+	public void PlayStairSound () {
+		rise.PlayOneShot(riseSound);
+	}
 }
