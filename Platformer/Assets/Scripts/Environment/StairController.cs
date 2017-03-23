@@ -15,7 +15,7 @@ public class StairController : MonoBehaviour {
         endingX = transform.position.x;
         endingZ = transform.position.z;
 
-        triggered = false;
+        triggered = true;
 	}
 	
 	// Update is called once per frame
