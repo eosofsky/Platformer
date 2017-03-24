@@ -27,8 +27,12 @@ public class Draw : MonoBehaviour {
 		}
 	}
 
-	public static void SetDrawable (bool drawable) {
-		canDraw = drawable;
+	public static void Activate () {
+		canDraw = true;
+	}
+
+	public static void Deactivate () {
+		canDraw = false;
 	}
 
 	void OnTriggerEnter (Collider collider) {

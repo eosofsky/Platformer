@@ -25,8 +25,15 @@ public class Drawer : MonoBehaviour {
 		}
 	}
 
-	public static void DrawerMove () {
+	public static void DrawerMoveToStairButton () {
 		agent.destination = internalStairsButton.position;
+		animator.SetBool ("Walking", true);
+		isWalking = true;
+	}
+
+	public static void DrawerMoveToPlayer () {
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		agent.destination = player.transform.position;
 		animator.SetBool ("Walking", true);
 		isWalking = true;
 	}

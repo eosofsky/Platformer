@@ -11,19 +11,20 @@ public class StairController : MonoBehaviour {
 
     private bool rising = false;
 	private bool falling = false;
-	private bool iWantToRise = false;
 	private bool blocked = false;
 
     void Start () {
         endingX = transform.position.x;
         endingZ = transform.position.z;
 		startingY = transform.position.y;
+		rising = false;
+		falling = false;
 	}
 	
 	void Update () {
         var currentPosition = transform.position;
 
-		if (!blocked && iWantToRise) {
+		if (!blocked && StairsButton.IsCovered ()) {
 			Trigger ();
 		}
 
@@ -69,13 +70,11 @@ public class StairController : MonoBehaviour {
 	{
 		falling = true;
 		rising = false;
-		iWantToRise = false;
 	}
 
 	void OnCollisionEnter (Collision collision) {
 		if (collision.gameObject.name == "Coal Pile") {
 			blocked = true;
-			iWantToRise = true;
 			falling = true;
 			rising = false;
 		}

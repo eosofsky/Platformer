@@ -8,12 +8,16 @@ public class Aim : MonoBehaviour {
 	private RaycastHit pointHit;
 
 	public static Transform Target;
-	public static bool AimEnabled;
+	private static bool AimEnabled = false;
 
 	public GameObject targetIndicator;
 
-	void Awake () {
+	public static void Activate () {
 		AimEnabled = true;
+	}
+
+	public static void Deactivate () {
+		AimEnabled = false;
 	}
 
 	void Update () {
