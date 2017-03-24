@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shard : MonoBehaviour {
 
-	public float lowerAmount = 0.01f;
+	public float lowerAmount = 0.1f;
 
 	private static bool isLowering = false;
 	private static GameObject player;
@@ -25,9 +25,11 @@ public class Shard : MonoBehaviour {
 		isLowering = true;
 	}
 
-	void OnCollisionEnter () {
-		isLowering = false;
-		Destroy (gameObject);
-		GameManager.instance.ShardHit ();
+	void OnCollisionEnter (Collision collision) {
+		if (collision.gameObject.name == "Protagonist") {
+			isLowering = false;
+			Destroy (gameObject);
+			GameManager.instance.ShardHit ();
+		}
 	}
 }

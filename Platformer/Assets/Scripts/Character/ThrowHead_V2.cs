@@ -130,9 +130,9 @@ public class ThrowHead_V2 : MonoBehaviour
 	public void SetTarget (GameObject t, bool ct)
     {
 		if (ct) {
-			t.layer = LayerMask.NameToLayer("Targetable");
+			t.transform.GetChild (1).gameObject.layer = LayerMask.NameToLayer("Targetable");
 		} else {
-			t.layer = LayerMask.NameToLayer("Default");
+			t.transform.GetChild (1).gameObject.layer = LayerMask.NameToLayer("Default");
 		}
     }
 
