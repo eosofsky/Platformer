@@ -8,6 +8,8 @@ public class ConveyorController : MonoBehaviour {
     public float startingY;
     public float startingZ;
 
+    public GameObject bucket;
+
     private bool moving;
     private int direction; // 1 if up, -1 if down, 0 if neither
     private int movements;
@@ -26,7 +28,7 @@ public class ConveyorController : MonoBehaviour {
         movements = 40; // how many steps we should take
         direction = 0;
 
-        height = 0.6f;
+        height = 2.0f;
         delta = (startingY - height) / movements;
         movements = 0; // set the amount of movements we've made to zero
 
@@ -70,7 +72,7 @@ public class ConveyorController : MonoBehaviour {
             {
                 if (movements < 1)
                 {
-                    GetComponentInParent<ConveyorSound>().PlaySound();
+                    // GetComponentInParent<ConveyorSound>().PlaySound();
                 }
 
                 //DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(true);
@@ -92,10 +94,17 @@ public class ConveyorController : MonoBehaviour {
         {
             var currentPosition = transform.position;
             var x = currentPosition.x;
-            var y = currentPosition.y + direction*delta;
+            var y = currentPosition.y - direction*delta;
             var z = currentPosition.z;
 
+
             transform.position = new Vector3(x, y, z);
+
+            var axis = new Vector3(1.0f, 0.0f, 0.0f);
+            var origin = bucket.transform.position;
+            bucket.transform.RotateAround(origin, axis, direction * 0.9f);
+
+
             movements++;
         }
         else
