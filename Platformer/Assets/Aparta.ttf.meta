@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: f5f1b83004ff1484da53c2806c82519e
+timeCreated: 1490318574
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Aparta
+  fontNames:
+  - Aparta
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
