@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour {
 		Aim.Activate ();
 		movementScript.enabled = true;
 		Drawer.DrawerMoveToPlayer ();
-		CoalHasCleared ();
 	}
 
 	void CoalHasCleared () {

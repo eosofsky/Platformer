@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class WheelbarrowGuy : MonoBehaviour {
 
-	public Transform coal;
-	public Transform furnace;
+	public Transform miniFurnace;
+	public Transform bigFurnace;
 	public float delay;
 
 	private Transform dest;
@@ -14,19 +14,27 @@ public class WheelbarrowGuy : MonoBehaviour {
 	private NavMeshAgent agent;
 
 	void Awake () {
-		dest = furnace;
+		if (Random.value < 0.5f) {
+			dest = bigFurnace;
+		} else {
+			dest = miniFurnace;
+		}
 		agent = GetComponent<NavMeshAgent> ();
 		agent.destination = dest.position;
 		animator = GetComponent<Animator> ();
 	}
 
-	void OnCollisionEnter (Collision collision) {
-		if (collision.transform == coal) {
-			dest = furnace;
-		} else if (collision.transform == furnace) {
-			dest = coal;
-		} else {
-			return;
+	void Update () {
+		if (AlmostEqualPos (transform.position, dest.position)) {
+			ChangeDest (dest);
+		}
+	}
+
+	private void ChangeDest (Transform currentDest) {
+		if (currentDest == miniFurnace) {
+			dest = bigFurnace;
+		} else if (currentDest == bigFurnace) {
+			dest = miniFurnace;
 		}
 		StartCoroutine (IdleAndGo ());
 	}
@@ -41,4 +49,16 @@ public class WheelbarrowGuy : MonoBehaviour {
 		agent.destination = dest.position;
 	}
 
+	private bool AlmostEqualPos (Vector3 v1, Vector3 v2) {
+		return (AlmostEqual (v1.x, v2.x) && AlmostEqual (v1.y, v2.y) && AlmostEqual (v1.z, v2.z));
+	}
+
+	private bool AlmostEqual (float x, float y)
+	{
+		float buffer = 0.1f;
+		float low = y - buffer;
+		float high = y + buffer;
+
+		return (low <= x && x <= high);
+	}
 }
