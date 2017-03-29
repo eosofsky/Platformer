@@ -26,7 +26,7 @@ public class Aim : MonoBehaviour {
 
 			int layerMask = (1 << 8);
 			if (Physics.Raycast (point, out pointHit, 10000, layerMask)) {
-				targetIndicator.transform.position = pointHit.transform.position;
+				targetIndicator.transform.position = pointHit.transform.GetChild (0).transform.position;
 				targetIndicator.SetActive (true);
 				Target = pointHit.transform.GetChild (0).transform;
 			} else {

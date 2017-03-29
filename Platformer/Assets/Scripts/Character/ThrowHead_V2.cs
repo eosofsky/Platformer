@@ -101,7 +101,7 @@ public class ThrowHead_V2 : MonoBehaviour
 
 			/* Slowly move camera to have same position as head */
 			Vector3 cameraDest = Projectile.position;
-			cameraDest.y += cameraHeight;
+			//cameraDest.y += cameraHeight;
 			Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, cameraDest, 0.01f);
 
 			FadeHead ();
@@ -123,6 +123,8 @@ public class ThrowHead_V2 : MonoBehaviour
 		}
 
         gameObject.transform.parent = target;
+		gameObject.transform.localPosition = Vector3.zero;
+		gameObject.transform.localRotation = Quaternion.Euler (0f, 0f, 0f);
         hasThrown = true;
 		Aim.Deactivate ();
     }
