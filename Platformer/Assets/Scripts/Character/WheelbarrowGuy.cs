@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class WheelbarrowGuy : MonoBehaviour {
 
 	public Transform miniFurnace;
-	public Transform bigFurnace;
+	public Transform coalPile;
 	public float delay;
 
 	private Transform dest;
@@ -15,7 +15,7 @@ public class WheelbarrowGuy : MonoBehaviour {
 
 	void Awake () {
 		if (Random.value < 0.5f) {
-			dest = bigFurnace;
+			dest = coalPile;
 		} else {
 			dest = miniFurnace;
 		}
@@ -32,8 +32,8 @@ public class WheelbarrowGuy : MonoBehaviour {
 
 	private void ChangeDest (Transform currentDest) {
 		if (currentDest == miniFurnace) {
-			dest = bigFurnace;
-		} else if (currentDest == bigFurnace) {
+			dest = coalPile;
+		} else if (currentDest == coalPile	) {
 			dest = miniFurnace;
 		}
 		StartCoroutine (IdleAndGo ());
