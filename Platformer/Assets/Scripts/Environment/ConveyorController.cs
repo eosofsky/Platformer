@@ -8,6 +8,10 @@ public class ConveyorController : MonoBehaviour {
     public float startingY;
     public float startingZ;
 
+    public float endingX;
+    public float endingY;
+    public float endingZ;
+
     public GameObject bucket;
 
     private bool moving;
@@ -88,6 +92,26 @@ public class ConveyorController : MonoBehaviour {
         }
 	}
 
+    void RouteNo1()
+    {
+
+    }
+
+    void RouteNo2()
+    {
+
+    }
+
+    void RouteNo3()
+    {
+
+    }
+
+    void RouteNo4()
+    {
+
+    }
+
     void SmoothRise()
     {
         if (movements < 40)
@@ -130,6 +154,11 @@ public class ConveyorController : MonoBehaviour {
         }
     }
 
+
+
+    /*
+     *  Equality to determine location.
+     */  
     bool AlmostEqual(float x, float y)
     {
         var buffer = 0.05f;
