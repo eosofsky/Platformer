@@ -10,8 +10,7 @@ public class ThrowHead_V2 : MonoBehaviour
     public Transform Projectile;
 
     private bool hasThrown;
-    //private bool moving;
-	private float cameraHeight = 1.3f;
+	//private float cameraHeight = 1.3f;
 
 	private Transform originalTransform;
 	private Vector3 originalCameraPos;
@@ -20,13 +19,12 @@ public class ThrowHead_V2 : MonoBehaviour
     void Awake()
     {
         hasThrown = false;
-        //moving = true;
     }
 
     void Update()
     {
 		if (!hasThrown) {
-			if (Input.GetMouseButtonDown (0)) {//Input.GetKeyDown (KeyCode.P)) {
+			if (Input.GetMouseButtonDown (0)) {
 				Transform target = Aim.Target;
 				if (!target) {
 					return;
@@ -48,7 +46,7 @@ public class ThrowHead_V2 : MonoBehaviour
 				rb.useGravity = false;
 			}
 		} else {
-			if (Input.GetMouseButtonDown (0)) {//Input.GetKeyDown (KeyCode.P)) {
+			if (Input.GetMouseButtonDown (0)) {
 				ResetHead ();
 			}
 		}
@@ -65,7 +63,7 @@ public class ThrowHead_V2 : MonoBehaviour
 		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
 
 		Vector3 destination = target.position;
-		//destination.y -= 0.91f;
+		destination.y -= 0.91f;
 		//destination.z -= 0.2f;
 
         // Move projectile to the position of throwing object + add some offset if needed.
@@ -123,8 +121,6 @@ public class ThrowHead_V2 : MonoBehaviour
 		}
 
         gameObject.transform.parent = target;
-		gameObject.transform.localPosition = Vector3.zero;
-		gameObject.transform.localRotation = Quaternion.Euler (0f, 0f, 0f);
         hasThrown = true;
 		Aim.Deactivate ();
     }
