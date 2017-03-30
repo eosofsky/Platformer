@@ -6,34 +6,42 @@ public class LookAround : MonoBehaviour {
 
 	public delegate void Callback ();
 
-	private static bool canLook = false; 
+	public static LookAround instance;
+
+	//private static bool canLook = false; 
 	private Animator animator;
-	private static Callback postLookBehavior;
+	//private static Callback postLookBehavior;
 
 	void Awake () {
+		instance = this;
 		animator = GetComponent<Animator> ();
 	}
 
-	void Update () {
+	/*void Update () {
 		if (canLook && Input.GetMouseButtonDown (0)) {
 			StartCoroutine (StartLookAround ());
 		}
+	}*/
+
+	public void Look (Callback callback) {
+		StartCoroutine (StartLookAround (callback));
 	}
 
-	private IEnumerator StartLookAround () {
-		canLook = false;
+	private IEnumerator StartLookAround (Callback callback) {
+		//canLook = false;
 		animator.SetTrigger ("LookAround");
 		yield return new WaitForSeconds (1f);
-		postLookBehavior ();
+		callback ();
+		//postLookBehavior ();
 	}
 
-	public static void Activate (Callback callback) {
+	/*public static void Activate (Callback callback) {
 		postLookBehavior = callback;
 		canLook = true;
 	}
 
 	public static void Deactivate () {
 		canLook = false;
-	}
+	}*/
 
 }

@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
 		Shovel.Activate ();
 		Draw.Deactivate ();
 		Aim.Deactivate ();
-		LookAround.Deactivate ();
+		//LookAround.Deactivate ();
 		movementScript.enabled = false;
 	}
 
@@ -74,7 +74,8 @@ public class GameManager : MonoBehaviour {
 				   Obstruction disappears. */
 		// 4
 		Shovel.Deactivate ();
-		LookAround.Activate (ShowDrawerCutScene);
+		//LookAround.Activate (ShowDrawerCutScene);
+		LookAround.instance.Look (ShowDrawerCutScene);
 		movementScript.enabled = true;
 		Obstruction.RemoveObstruction ();
 	}
