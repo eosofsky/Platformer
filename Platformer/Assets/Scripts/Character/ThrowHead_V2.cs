@@ -4,10 +4,13 @@ using System.Collections;
 // Adapted from https://forum.unity3d.com/threads/throw-an-object-along-a-parabola.158855/
 public class ThrowHead_V2 : MonoBehaviour
 {
+	public delegate void Callback ();
+
     public float firingAngle = 45.0f;
     public float gravity = 9.8f;
+	public static bool canReattach;
 
-    public Transform Projectile;
+    private Transform Projectile;
 
     private bool hasThrown;
 	//private float cameraHeight = 1.3f;
@@ -16,9 +19,14 @@ public class ThrowHead_V2 : MonoBehaviour
 	private Vector3 originalCameraPos;
 	private Quaternion originalCameraRot;
 
+	private static Callback postThrow;
+
     void Awake()
     {
+		canReattach = false;
         hasThrown = false;
+		Projectile = Camera.main.transform;
+		postThrow = null;
     }
 
     void Update()
@@ -35,22 +43,26 @@ public class ThrowHead_V2 : MonoBehaviour
 
 				/* Unparent the head from the body */
 				originalTransform = Projectile.transform.parent;
-				Projectile.transform.parent = null;
+				Projectile.transform.parent = target.parent;
 
 				/* Trigger animation */
 				GameObject.FindGameObjectWithTag ("Player").GetComponent<Animator> ().SetTrigger ("Throw");
 
 				StartCoroutine (SimulateProjectile (target));
 
-				var rb = gameObject.AddComponent<Rigidbody> ();
-				rb.useGravity = false;
+				//var rb = gameObject.AddComponent<Rigidbody> ();
+				//rb.useGravity = false;
 			}
-		} else {
+		} else if (canReattach) {
 			if (Input.GetMouseButtonDown (0)) {
 				ResetHead ();
 			}
 		}
     }
+
+	public static void SetPostThrow (Callback callback) {
+		postThrow = callback;
+	}
 
 	IEnumerator SimulateProjectile(Transform target)
     {
@@ -60,10 +72,10 @@ public class ThrowHead_V2 : MonoBehaviour
 		GameObject.FindGameObjectWithTag ("AttachedHead").GetComponent<SkinnedMeshRenderer> ().enabled = false;
 
 		/* Make the head visible */
-		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
+		///Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
 
 		Vector3 destination = target.position;
-		destination.y -= 0.91f;
+		//destination.y -= 0.91f;
 		//destination.z -= 0.2f;
 
         // Move projectile to the position of throwing object + add some offset if needed.
@@ -83,10 +95,10 @@ public class ThrowHead_V2 : MonoBehaviour
         float flightDuration = target_Distance / Vx;
 
         // Rotate projectile to face the target.
-		Quaternion orgRot = Camera.main.transform.rotation;
-		Projectile.rotation = Quaternion.LookRotation(destination - Projectile.position);
-		Quaternion newRot = Camera.main.transform.rotation;
-		Camera.main.transform.rotation = orgRot;
+		//Quaternion orgRot = Camera.main.transform.rotation;
+		//Projectile.rotation = Quaternion.LookRotation(destination - Projectile.position);
+		//Quaternion newRot = Camera.main.transform.rotation;
+		//Camera.main.transform.rotation = orgRot;
 
         float elapse_time = 0;
 
@@ -95,14 +107,14 @@ public class ThrowHead_V2 : MonoBehaviour
             Projectile.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
 
 			/* Slowly rotate camera to have same rotation as head */
-			Camera.main.transform.rotation = Quaternion.Lerp (Camera.main.transform.rotation, newRot, 0.025f);
+			//Camera.main.transform.rotation = Quaternion.Lerp (Camera.main.transform.rotation, newRot, 0.025f);
 
 			/* Slowly move camera to have same position as head */
-			Vector3 cameraDest = Projectile.position;
+			///Vector3 cameraDest = Projectile.position;
 			//cameraDest.y += cameraHeight;
-			Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, cameraDest, 0.01f);
+			///Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, cameraDest, 0.01f);
 
-			FadeHead ();
+			//FadeHead ();
 
             elapse_time += Time.deltaTime;
 
@@ -110,17 +122,21 @@ public class ThrowHead_V2 : MonoBehaviour
         }
 
 		/* Make the head invisible */
-		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = false;
+		///Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = false;
+
+		//Projectile.position = Vector3.zero;
+
+		postThrow ();
 
 		/* Activate the FPS viewpoint */
 		CameraRotate.Instance.Activate ();
 
 		/* Make sure the head hasn't missed the platform if the platform has started moving upwards */
-		if (Camera.main.transform.position.y < target.position.y) {
-			gameObject.GetComponent <Rigidbody> ().useGravity = true;
-		}
+		//if (Camera.main.transform.position.y < target.position.y) {
+		//	gameObject.GetComponent <Rigidbody> ().useGravity = true;
+		//}
 
-        gameObject.transform.parent = target;
+		//Projectile.parent = target;
         hasThrown = true;
 		Aim.Deactivate ();
     }
@@ -128,13 +144,13 @@ public class ThrowHead_V2 : MonoBehaviour
 	public void SetTarget (GameObject t, bool ct)
     {
 		if (ct) {
-			t.transform.GetChild (1).gameObject.layer = LayerMask.NameToLayer("Targetable");
+			t.layer = LayerMask.NameToLayer("Targetable");
 		} else {
-			t.transform.GetChild (1).gameObject.layer = LayerMask.NameToLayer("Default");
+			t.layer = LayerMask.NameToLayer("Default");
 		}
     }
 
-	private void FadeHead () {
+	/*private void FadeHead () {
 		Material material = GameObject.FindGameObjectWithTag ("Head").GetComponentInChildren<SkinnedMeshRenderer> ().material;
 		Color color = material.color;
 		color.a -= 0.017f;
@@ -146,7 +162,7 @@ public class ThrowHead_V2 : MonoBehaviour
 		Color color = material.color;
 		color.a = 1f;
 		material.color = color;
-	}
+	}*/
 
     //public void LockMovement (bool moving)
     //{
@@ -160,27 +176,27 @@ public class ThrowHead_V2 : MonoBehaviour
 
 		GameObject attachedHead = GameObject.FindGameObjectWithTag("AttachedHead");
 
-		/* Reset the position and rotation */
-		Projectile.transform.position = attachedHead.transform.position;
-		Camera.main.transform.localPosition = originalCameraPos;
-		Camera.main.transform.localRotation = originalCameraRot;
-
 		/* Reparent the head to the body */
 		Projectile.transform.parent = originalTransform;
 		originalTransform = null;
 
-		/* Make the dissembodied head invisible */
-		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = false;
+		/* Reset the position and rotation */
+		//Projectile.transform.position = attachedHead.transform.position;
+		Camera.main.transform.localPosition = originalCameraPos;
+		Camera.main.transform.localRotation = originalCameraRot;
 
-		ResetHeadOpacity ();
+		/* Make the dissembodied head invisible */
+		//Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = false;
+
+		//ResetHeadOpacity ();
 
 		/* Make attached head visible */
 		attachedHead.GetComponent<SkinnedMeshRenderer> ().enabled = true;
 
 		/* Dissembodied head faces the same direction as the attached head */
-		Projectile.rotation = attachedHead.transform.rotation;
+		//Projectile.rotation = attachedHead.transform.rotation;
 
-		Destroy(gameObject.GetComponent<Rigidbody> ());
+		//Destroy(gameObject.GetComponent<Rigidbody> ());
 
 		CameraRotate.Instance.Deactivate ();
 

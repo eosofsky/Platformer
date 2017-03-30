@@ -23,7 +23,7 @@ public class ConveyorController : MonoBehaviour {
     private float height;
     private float delta; // the change between heights
 
-	private GameObject DissembodiedHead;
+	//private GameObject DissembodiedHead;
 
     // Use this for initialization
     void Start()
@@ -36,7 +36,7 @@ public class ConveyorController : MonoBehaviour {
         delta = (startingY - height) / movements;
         movements = 0; // set the amount of movements we've made to zero
 
-		DissembodiedHead = GameObject.FindGameObjectWithTag ("Head");
+		//DissembodiedHead = GameObject.FindGameObjectWithTag ("Head");
     }
 	
 	// Update is called once per frame
@@ -60,12 +60,12 @@ public class ConveyorController : MonoBehaviour {
             else if (direction == -1)
             {
                 direction = 1;
-				DissembodiedHead.GetComponent<ThrowHead_V2> ().SetTarget (gameObject, true);
+				//DissembodiedHead.GetComponent<ThrowHead_V2> ().SetTarget (gameObject, true);
             }
             else if (direction == 1)
             {
                 direction = 0;
-				DissembodiedHead.GetComponent<ThrowHead_V2>().SetTarget (gameObject, false);
+				//DissembodiedHead.GetComponent<ThrowHead_V2>().SetTarget (gameObject, false);
             }
             moving = true;
             time = 0.0f;

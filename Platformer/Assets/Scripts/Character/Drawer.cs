@@ -19,21 +19,27 @@ public class Drawer : MonoBehaviour {
 	}
 
 	void Update () {
-		if (isWalking && AlmostEqualPos(transform.position, agent.destination)) {
-			animator.SetBool ("Walking", false);
-			isWalking = false;
+		if (isWalking) {
+			if (AlmostEqualPos (transform.position, agent.destination)) {
+				animator.SetBool ("Walking", false);
+				isWalking = false;
+				// Trigger cut scene, end of level 1
+				Debug.Log ("Trigger cut scene, end of level 1");
+			} else {
+				agent.destination = Camera.main.transform.position;
+			}
 		}
 	}
 
-	public static void DrawerMoveToStairButton () {
+	/*public static void DrawerMoveToStairButton () {
 		agent.destination = internalStairsButton.position;
 		animator.SetBool ("Walking", true);
 		isWalking = true;
-	}
+	}*/
 
-	public static void DrawerMoveToPlayer () {
-		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		agent.destination = player.transform.position;
+	public static void DrawerMoveToHead () {
+		//GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		agent.destination = Camera.main.transform.position;
 		animator.SetBool ("Walking", true);
 		isWalking = true;
 	}
@@ -44,7 +50,7 @@ public class Drawer : MonoBehaviour {
 
 	private bool AlmostEqual (float x, float y)
 	{
-		float buffer = 0.07f;
+		float buffer = 0.5f;
 		float low = y - buffer;
 		float high = y + buffer;
 
