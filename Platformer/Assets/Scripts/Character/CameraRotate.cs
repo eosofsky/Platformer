@@ -23,6 +23,7 @@ public class CameraRotate: MonoBehaviour {
 		isActive = true;
 		isActivating = true;
 		m_MouseLook.SetCursorLock (true);
+		m_MouseLook.Init(m_Camera.transform, m_Camera.transform);
 	}
 
 	public void Deactivate () {
@@ -37,10 +38,14 @@ public class CameraRotate: MonoBehaviour {
 			return;
 		}
 
-		if (isActivating) {
+		//if (isActivating) {
+			//isActivating = false;
+			//m_MouseLook.Init(m_Camera.transform, m_Camera.transform);
+			//return;
+
 			/* Slowly rotate camera to look towards body */
-			GameObject body = GameObject.FindGameObjectWithTag ("Player");
-			Quaternion targetRot = Quaternion.LookRotation(body.transform.position - m_Camera.transform.position);
+			/*GameObject body = GameObject.FindGameObjectWithTag ("Player");
+			Quaternion targetRot = Quaternion.LookRotation(lookPoint - m_Camera.transform.position);
 			m_Camera.transform.localRotation = Quaternion.Slerp (m_Camera.transform.localRotation, targetRot,
 					0.025f); 
 			if (Quaternion.Angle (m_Camera.transform.localRotation, targetRot) < 5f) {
@@ -48,7 +53,7 @@ public class CameraRotate: MonoBehaviour {
 				m_MouseLook.Init(m_Camera.transform, m_Camera.transform);
 			}
 			return;
-		}
+		}*/
 
 		RotateView();
 	}

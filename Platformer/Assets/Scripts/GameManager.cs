@@ -60,14 +60,14 @@ public class GameManager : MonoBehaviour {
 		// 7
 		/* You still cannot shovel or look around, but you can draw, aim, and move */
 		Draw.Activate ();
+		ThrowHead_V2.SetPostThrow (Drawer.DrawerMoveToHead);
 		Aim.Activate ();
 		movementScript.enabled = true;
-		Drawer.DrawerMoveToPlayer ();
 	}
 
-	void CoalHasCleared () {
-		Drawer.DrawerMoveToStairButton ();
-	}
+	//void CoalHasCleared () {
+	//	Drawer.DrawerMoveToStairButton ();
+	//}
 
 	public void ShardHit () {
 		/* Now you cannot shovel, still can't draw or aim, but you can move and look around.
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour {
 		Shovel.Deactivate ();
 		//LookAround.Activate (ShowDrawerCutScene);
 		LookAround.instance.Look (ShowDrawerCutScene);
-		movementScript.enabled = true;
+		//movementScript.enabled = true;
 		Obstruction.RemoveObstruction ();
 	}
 
