@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour {
 
@@ -12,9 +13,10 @@ public class Health : MonoBehaviour {
 
 	public static void TakeHit () {
 		health--;
-		Debug.Log ("health: " + health);
+		//Debug.Log ("health: " + health);
 		if (health == 0) {
-			Debug.Log ("Lose");
+			// Lose
+			SceneManager.LoadScene (4);
 		}
 	}
 }
