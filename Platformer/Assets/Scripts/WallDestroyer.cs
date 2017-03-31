@@ -8,10 +8,12 @@ public class WallDestroyer : MonoBehaviour {
     public GameObject[] wallPieces;
 
     private int triggered;
+    private int frames;
 
     private void Start()
     {
         triggered = 0;
+        frames = 0;
     }
 
     private void Update()
@@ -22,9 +24,22 @@ public class WallDestroyer : MonoBehaviour {
             {
                 var rg = piece.AddComponent<Rigidbody>();
                 rg.useGravity = false;
+                rg.isKinematic = true;
             }
 
             triggered++;
+        }
+        else if (triggered > 1)
+        {
+            frames++; 
+        }
+
+        if (frames > 100)
+        {
+            foreach (var piece in wallPieces)
+            {
+                piece.SetActive(false);
+            }
         }
     }
 
