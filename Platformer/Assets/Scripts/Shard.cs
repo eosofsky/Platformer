@@ -43,9 +43,14 @@ public class Shard : MonoBehaviour {
 
 	void OnCollisionEnter (Collision collision) {
 		if (collision.gameObject.name == "Protagonist") {
-			isLowering = false;
-			Destroy (gameObject);
-			GameManager.instance.ShardHit ();
+			if (isLowering) {
+				isLowering = false;
+				Destroy (gameObject);
+				GameManager.instance.ShardHit ();
+			} else {
+				Health.TakeHit ();
+				Destroy (gameObject.GetComponent<BoxCollider> ());
+			}
 		}
 	}
 }
