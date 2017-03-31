@@ -24,7 +24,7 @@ public class Drawer : MonoBehaviour {
 				animator.SetBool ("Walking", false);
 				isWalking = false;
 				// Trigger cut scene, end of level 1
-				Debug.Log ("Trigger cut scene, end of level 1");
+				CutSceneManager.instance.ShowCutScene (4, 7, true, 3.0f, true, null);
 			} else {
 				agent.destination = Camera.main.transform.position;
 			}
