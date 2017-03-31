@@ -24,7 +24,6 @@ public class WallDestroyer : MonoBehaviour {
             {
                 var rg = piece.AddComponent<Rigidbody>();
                 rg.useGravity = false;
-                rg.isKinematic = true;
             }
 
             triggered++;
