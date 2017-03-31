@@ -9,6 +9,7 @@ public class Drawer : MonoBehaviour {
 	private static NavMeshAgent agent;
 	private static Transform internalStairsButton;
 	private static bool isWalking = false;
+	private static bool isGoingToHead;
 	private GameObject DissembodiedHead;
 
     public GameObject wall;
@@ -19,6 +20,7 @@ public class Drawer : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		agent = GetComponent<NavMeshAgent> ();
 		internalStairsButton = stairsButton;
+		isGoingToHead = false;
 	}
 
 	void Update () {
@@ -26,9 +28,12 @@ public class Drawer : MonoBehaviour {
 			if (AlmostEqualPos (transform.position, agent.destination)) {
 				animator.SetBool ("Walking", false);
 				isWalking = false;
-				// Trigger cut scene, end of level 1
-				CutSceneManager.instance.ShowCutScene (4, 7, true, 3.0f, true, PostCutscene);
-			} else {
+				if (isGoingToHead) {
+					// Trigger cut scene, end of level 1
+					CutSceneManager.instance.ShowCutScene (4, 7, true, 3.0f, true, PostCutscene);
+					isGoingToHead = false;
+				}
+			} else if (isGoingToHead) {
 				agent.destination = Camera.main.transform.position;
 			}
 		}
@@ -51,6 +56,7 @@ public class Drawer : MonoBehaviour {
 		agent.destination = Camera.main.transform.position;
 		animator.SetBool ("Walking", true);
 		isWalking = true;
+		isGoingToHead = true;
 	}
 
 	private bool AlmostEqualPos (Vector3 v1, Vector3 v2) {
