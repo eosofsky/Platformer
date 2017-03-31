@@ -12,150 +12,57 @@ public class ConveyorController : MonoBehaviour {
     public float endingY;
     public float endingZ;
 
-    public GameObject bucket;
-
-    private bool moving;
-    private int direction; // 1 if up, -1 if down, 0 if neither
-    private int movements;
-
     private float time;
+    private float journeyLength;
+    private Vector3 startPoint;
+    private Vector3 endPoint;
 
-    private float height;
-    private float delta; // the change between heights
-
-	//private GameObject DissembodiedHead;
+    private int forwardBack;
 
     // Use this for initialization
     void Start()
     {
-        time = 0;
-        movements = 40; // how many steps we should take
-        direction = 0;
+        forwardBack = -1;
+        time = Time.time;
 
-        height = 2.0f;
-        delta = (startingY - height) / movements;
-        movements = 0; // set the amount of movements we've made to zero
-
-		//DissembodiedHead = GameObject.FindGameObjectWithTag ("Head");
+        startPoint = new Vector3(startingX, startingY, startingZ);
+        endPoint = new Vector3(endingX, endingY, endingZ);
+        journeyLength = Vector3.Distance(startPoint, endPoint);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        time += Time.deltaTime;
-
         var currentPosition = transform.position;
-
-        if (!moving)
+        
+        if (AlmostEqual(currentPosition.x, startingX) &&
+               AlmostEqual(currentPosition.y, startingY) &&
+               AlmostEqual(currentPosition.z, startingZ))
         {
-            //DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(false);
-            if (direction == 0)
-            {
-                if (AlmostEqual(currentPosition.x, startingX) &&
-                   AlmostEqual(currentPosition.y, startingY) &&
-                   AlmostEqual(currentPosition.z, startingZ))
-                {
-                    direction = -1;
-                }
-            }
-            else if (direction == -1)
-            {
-                direction = 1;
-				//DissembodiedHead.GetComponent<ThrowHead_V2> ().SetTarget (gameObject, true);
-            }
-            else if (direction == 1)
-            {
-                direction = 0;
-				//DissembodiedHead.GetComponent<ThrowHead_V2>().SetTarget (gameObject, false);
-            }
-            moving = true;
-            time = 0.0f;
+            forwardBack = -1;
+            time = Time.time;
         }
-        else
+        else if (AlmostEqual(currentPosition.x, endingX) &&
+               AlmostEqual(currentPosition.y, endingY) &&
+               AlmostEqual(currentPosition.z, endingZ))
         {
-            if (time > 5.0f) // five second loops
-            {
-                if (movements < 1)
-                {
-                    // GetComponentInParent<ConveyorSound>().PlaySound();
-                }
-
-                //DissembodiedHead.GetComponent<ThrowHead_V2>().LockMovement(true);
-                if (direction == 0)
-                {
-                    SmoothRotate();
-                }
-                else
-                {
-                    SmoothRise();
-                }
-            }
+            forwardBack = 1;
+            time = Time.time;
         }
-	}
 
-    void RouteNo1()
-    {
-
-    }
-
-    void RouteNo2()
-    {
-
-    }
-
-    void RouteNo3()
-    {
-
-    }
-
-    void RouteNo4()
-    {
-
-    }
-
-    void SmoothRise()
-    {
-        if (movements < 40)
+        if (forwardBack == -1)
         {
-            var currentPosition = transform.position;
-            var x = currentPosition.x;
-            var y = currentPosition.y - direction*delta;
-            var z = currentPosition.z;
+            float distCovered = (Time.time - time) * 1.0F;
+            float fracJourney = distCovered / journeyLength;
+            transform.position = Vector3.Lerp(startPoint, endPoint, fracJourney);
 
-
-            transform.position = new Vector3(x, y, z);
-
-            var axis = new Vector3(1.0f, 0.0f, 0.0f);
-            var origin = bucket.transform.position;
-            bucket.transform.RotateAround(origin, axis, direction * 0.9f);
-
-
-            movements++;
+            transform.position = Vector3.Lerp(currentPosition, endPoint, 0.02f);
         }
-        else
+        else if (forwardBack == 1)
         {
-            movements = 0;
-            moving = false;
+            transform.position = Vector3.Lerp(currentPosition, startPoint, 0.02f);
         }
     }
-
-    void SmoothRotate()
-    {
-        if (movements < 40)
-        {
-            var axis = new Vector3(0.0f, 1.0f, 0.0f);
-            var origin = new Vector3(0.0f, 0.0f, 0.0f);
-            transform.RotateAround(origin, axis, 0.5f);
-            movements++;
-        }
-        else
-        {
-            movements = 0;
-            moving = false;
-        }
-    }
-
-
-
+    
     /*
      *  Equality to determine location.
      */  
