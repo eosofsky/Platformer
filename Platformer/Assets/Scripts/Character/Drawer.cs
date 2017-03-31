@@ -9,10 +9,12 @@ public class Drawer : MonoBehaviour {
 	private static NavMeshAgent agent;
 	private static Transform internalStairsButton;
 	private static bool isWalking = false;
+	private GameObject DissembodiedHead;
 
 	public Transform stairsButton;
 
 	void Awake () {
+		DissembodiedHead = GameObject.FindGameObjectWithTag ("Head");
 		animator = GetComponent<Animator> ();
 		agent = GetComponent<NavMeshAgent> ();
 		internalStairsButton = stairsButton;
@@ -24,18 +26,24 @@ public class Drawer : MonoBehaviour {
 				animator.SetBool ("Walking", false);
 				isWalking = false;
 				// Trigger cut scene, end of level 1
-				CutSceneManager.instance.ShowCutScene (4, 7, true, 3.0f, true, null);
+				CutSceneManager.instance.ShowCutScene (4, 7, true, 3.0f, true, PostCutscene);
 			} else {
 				agent.destination = Camera.main.transform.position;
 			}
 		}
 	}
 
-	/*public static void DrawerMoveToStairButton () {
+	private void PostCutscene () {
+		DissembodiedHead.GetComponent<ThrowHead_V2> ().ResetHead ();
+		DrawerMoveToStairButton ();
+
+	}
+
+	public static void DrawerMoveToStairButton () {
 		agent.destination = internalStairsButton.position;
 		animator.SetBool ("Walking", true);
 		isWalking = true;
-	}*/
+	}
 
 	public static void DrawerMoveToHead () {
 		//GameObject player = GameObject.FindGameObjectWithTag ("Player");
