@@ -62,10 +62,10 @@ public class ConveyorController : MonoBehaviour {
             transform.position = Vector3.Lerp(currentPosition, startPoint, 0.02f);
         }
     }
-    
+
     /*
      *  Equality to determine location.
-     */  
+     */
     bool AlmostEqual(float x, float y)
     {
         var buffer = 0.05f;
