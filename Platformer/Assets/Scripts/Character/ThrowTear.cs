@@ -11,15 +11,24 @@ public class ThrowTear : MonoBehaviour
 	private int count;
 	private GameObject projectile;
 	private bool isThrowing;
+	private static bool isActive;
 
 	void Awake () {
 		count = 0;
 		isThrowing = false;
+		isActive = false;
 	}
 
+	public static void Activate () {
+		isActive = true;
+	}
 
 	void Update()
 	{
+		if (!isActive) {
+			return;
+		}
+
 		count++;
 		if (count > 100) {
 			if (!isThrowing) {

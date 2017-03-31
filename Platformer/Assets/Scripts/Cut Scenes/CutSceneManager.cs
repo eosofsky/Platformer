@@ -24,6 +24,13 @@ public class CutSceneManager : MonoBehaviour {
 		backingImage = GameObject.Find ("Backing Image").GetComponent<Image> ();
 	}
 
+	public void BlackOut () {
+		Color color = backingImage.color;
+		color.a += fadeAmount;
+		color.a = 1.0f;
+		backingImage.color = color;
+	}
+
 	public void ShowCutScene (int start, int end, bool backing, float switchDelay, bool automaticDismiss, Callback callback) {
 		currentCallback = callback;
 		StartCoroutine (RunSequence (start, end, backing, switchDelay, automaticDismiss));

@@ -63,7 +63,7 @@ public class ThrowHead_V3 : MonoBehaviour
 		Projectile.GetComponentInChildren<SkinnedMeshRenderer> ().enabled = true;
 
 		Vector3 destination = target.position;
-		destination.y -= 0.91f;
+		destination.y -= 1.0f;
 		destination.z -= 0.2f;
 
 		// Move projectile to the position of throwing object + add some offset if needed.

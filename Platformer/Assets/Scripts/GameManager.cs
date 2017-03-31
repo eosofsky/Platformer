@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour {
 		/* At start you can shovel, but you can't draw, aim, look around, or move */
 		// 1
 		Shovel.Activate ();
-		Draw.Deactivate ();
-		Aim.Deactivate ();
+		//Draw.Deactivate ();
+		//Aim.Deactivate ();
 		//LookAround.Deactivate ();
 		movementScript.enabled = false;
 	}
@@ -47,13 +47,20 @@ public class GameManager : MonoBehaviour {
 	void ShowDrawerCutScene () {
 		// 5
 		/* During cut scene, you still cannot shovel, draw, or aim, also can't look around or move */
-		movementScript.enabled = false;
-		CutSceneManager.instance.ShowCutScene (1, 4, true, 3.0f, true, ShowInstructionCutScene);
+		//movementScript.enabled = false;
+		CutSceneManager.instance.ShowCutScene (1, 3, true, 3.0f, true, ShowInstructionCutScene);
 	}
 
 	void ShowInstructionCutScene () {
 		// 6
-		CutSceneManager.instance.ShowCutScene (4, 5, false, 3.0f, false, ActivateDrawer);
+		CutSceneManager.instance.ShowCutScene (3, 4, false, 3.0f, false, PostCutScene);
+	}
+
+	void PostCutScene () {
+		// new 7
+		/* You still cannot shovel, but you can move */
+		ThrowHead_V2.SetPostThrow (Drawer.DrawerMoveToHead);
+		movementScript.enabled = true;
 	}
 
 	void ActivateDrawer () {
