@@ -126,7 +126,9 @@ public class ThrowHead_V2 : MonoBehaviour
 
 		//Projectile.position = Vector3.zero;
 
-		postThrow ();
+		if (postThrow != null) {
+			postThrow ();
+		}
 
 		/* Activate the FPS viewpoint */
 		CameraRotate.Instance.Activate ();

@@ -8,7 +8,7 @@ public class Aim : MonoBehaviour {
 	private RaycastHit pointHit;
 
 	public static Transform Target;
-	private static bool AimEnabled = false;
+	private static bool AimEnabled = true;
 
 	public GameObject targetIndicator;
 
