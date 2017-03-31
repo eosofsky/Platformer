@@ -11,6 +11,7 @@ public class Drawer : MonoBehaviour {
 	private static bool isWalking = false;
 	private GameObject DissembodiedHead;
 
+    public GameObject wall;
 	public Transform stairsButton;
 
 	void Awake () {
@@ -36,7 +37,7 @@ public class Drawer : MonoBehaviour {
 	private void PostCutscene () {
 		DissembodiedHead.GetComponent<ThrowHead_V2> ().ResetHead ();
 		DrawerMoveToStairButton ();
-
+        wall.SetActive(false);
 	}
 
 	public static void DrawerMoveToStairButton () {

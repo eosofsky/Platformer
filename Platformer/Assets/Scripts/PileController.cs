@@ -23,6 +23,7 @@ public class PileController : MonoBehaviour {
         if (WallsDestroyed > 6)
         {
             largePiece.SetActive(false);
+            GetComponent<BoxCollider>().enabled = false;
         }
         else if (WallsDestroyed > 3)
         {
